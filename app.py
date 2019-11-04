@@ -35,6 +35,7 @@ class Article:
         }
 
 
+# get all links of news articles on the front page
 def get_news_links(url):
     soup = BeautifulSoup(requests.get(url).content, 'html.parser')
     item = soup.find_all('div', class_='news-header')
@@ -45,6 +46,7 @@ def get_news_links(url):
     return links
 
 
+# extract data from a single pikio article
 def scrape(link):
     soup = BeautifulSoup(requests.get(link).content, 'html.parser')
     # remove all script tags
