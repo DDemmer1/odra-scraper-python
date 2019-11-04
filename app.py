@@ -2,82 +2,56 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, jsonify
+from bs4 import BeautifulSoup
+import requests
 
 app = Flask(__name__)
 
-articles = [
-    {
-        "headline": "Fianzierungszusage - Regierung will Zahl der Bahnübergänge reduzieren",
-        "textBody": "Die Experten von Verkehrsminister Scheuer haben die vielen Engpässe im Schienennetz für die Verspätungen der Bahn ausgemacht. Eine der skizzierten Maßnahmen zur Abhilfe klingt tatsächlich plausibel. Andreaskreuz an einem Bahnübergang: Zentraler Punkt im Klimaschutzprogramm Das Bundesverkehrsministerium will Engpässe im Schienennetz beseitigen und dafür auch mehr Bahnübergänge abschaffen. Ziel ist es, dass Züge schneller fahren können - und pünktlicher werden. Dazu ist geplant, Kommunen bei der Finanzierung von Brücken und Unterführungen zu entlasten, wie aus einem Gesetzentwurf zur Beschleunigung von Planungs- und Genehmigungsverfahren im Verkehrsbereich hervorgeht. Der Entwurf soll am Mittwoch vom Kabinett beschlossen werden. Bisher tragen Bund, die Bahn und Kommunen jeweils ein Drittel der Kosten, wenn es darum geht, Bahnübergänge zu beseitigen. Dies führt nach Angaben aus der Bahnbranche aber dazu, dass viele Bahnübergänge nicht abgeschafft werden - weil viele Kommunen ihren Anteil dafür nicht aufbringen können. Künftig soll der Bund die Hälfte tragen, die Bahn ein Drittel und das Land, in dem die Kreuzung liegt, ein Sechstel der Kosten. Mit der neuen Regelung solle ein Impuls gesetzt werden, Bahnübergänge mit erhöhtem Gefährdungspotenzial oder mit hoher Verkehrsbelastung auf Straße und Schiene zügiger zu beseitigen, heißt es im Entwurf. \"Ohne den Finanzierungsanteil der Kommunen werden sich die Planungen derartiger Maßnahmen voraussichtlich erheblich beschleunigen, da kommunale Entscheidungsprozesse entfallen oder vereinfacht werden.\" Fahrgast-Lobby zufrieden Notwendige Investitionen in das Schienennetz sollen früher wirksam, die Leistungsfähigkeit verbessert werden. \"Denn die Beseitigung von Bahnübergängen dient nicht nur der Erhöhung der Verkehrssicherheit, sondern auch der Pünktlichkeit im Schienenverkehr durch weniger störanfällige Anlagen der Leit- und Sicherungs-Technik\", heißt es in dem Gesetzentwurf. Dies habe Kapazitätssteigerungen beim Betrieb und Geschwindigkeitserhöhungen im Personenverkehr zur Folge - und dadurch Verkehrsverlagerungen auf die Schiene. Der Geschäftsführer des Verkehrsbündnisses Allianz pro Schiene, Dirk Flege zeigte sich zufrieden mit der Initiative: \"Wir begrüßen die beabsichtigten Änderungen des Eisenbahnkreuzungsgesetzes. Die Kommunen werden entlastet, das wird mehr Tempo bei Bahnprojekten bringen. Deutschland braucht dringend eine Beschleunigung bei Schieneninvestitionen, um mit dem Klimaschutz im Verkehr voran zu kommen.\" Nach Angaben der Allianz pro Schiene gab es 2015 in Deutschland insgesamt rund 23.500 Bahnübergänge. Mehr Pünktlichkeit, mehr Kapazitäten Im Gesetzentwurf geht es neben Bahnübergängen auch darum, Straßen und Wasserwege schneller sanieren zu können: \"Angesichts der in Deutschland bestehenden großen Anzahl dringlicher Infrastrukturvorhaben ist eine Beschleunigung der Planungs- und Genehmigungsverfahren unerlässlich.\" Die Stärkung der Schiene ist ein zentraler Punkt im Klimaschutzprogramm der schwarz-roten Koalition - damit mehr Menschen die umweltfreundliche Bahn nutzen. Milliardenschwere Investitionen sollen in den nächsten Jahren mehr Pünktlichkeit und mehr Kapazität bringen. Engpässe im Netz sollen beseitigt werden. Die Bundesregierung will ihre Mittel zur Sanierung des oft maroden Schienennetzes massiv steigern. mik/dpa-AFX © SPIEGEL ONLINE 2019 Alle Rechte vorbehalten Vervielfältigung nur mit Genehmigung",
-        "source": "https://www.spiegel.de",
-        "sourceName": "spiegel",
-        "author": "",
-        "topic": "Wirtschaft",
-        "link": "https://www.spiegel.de/wirtschaft/soziales/regierung-will-zahl-der-bahnuebergaenge-reduzieren-a-1294693.html#ref=rss",
-        "crawlDate": "2019-11-04T07:12:08.708+0000",
-        "creationDate": "Montag, 04.11.2019 07:38 Uhr"
-    },
-    {
-        "headline": "Handelsstreit - US-Regierung hält Strafzölle für vermeidbar",
-        "textBody": "Hoffnung für die deutschen Autohersteller: Die US-Regierung scheint zufrieden mit den Zugeständnissen, die aktuell auf dem Tisch liegen. Strafzölle könnten so noch einmal vermieden werden. VW-Limousinen auf dem Hof eines US-Autohändlers: Optimistische Prognosen keine Seltenheit US-Handelsminister Wilbur Ross hat Strafzölle auf Autoimporte aus Europa und Asien als vermeidbar bezeichnet. Sowohl die Gespräche mit einzelnen Unternehmen über ihre Investitionspläne als auch die Verhandlungen mit den Regierungen liefen gut, sagte Ross am Sonntag dem Nachrichtensender Bloomberg TV. Die Hoffnung sei, dass es genügend Fortschritte geben werde, um die Strafzölle zu vermeiden, sagte er am Rande eines regionalen Wirtschaftstreffens in Bangkok. Die US-Regierung hat Europa und Japan wegen einer angeblichen Bedrohung der nationalen Sicherheit durch hohe Autoimporte mit der Verhängung von Strafzöllen gedroht. Der Schritt wäre eine deutliche Eskalation des Handelskonflikts mit der EU und würde vor allem deutsche Autohersteller schwer treffen. Die US-Regierung hatte die angedrohten Strafzölle im Mai für sechs Monate ausgesetzt. Gegen Mitte November muss erneut über die Verlängerung entschieden werden. Experten zufolge nutzt die US-Regierung die Strafzölle vor allem als Drohgebärde, um Zugeständnisse zu erzwingen. Allerdings sind auch die optimistischen Prognosen der Verhandlungsführer im Vorfeld neuer Gespräche keine Seltenheit. Nicht selten jedoch wurden sie im Nachhinein durch US-Präsident Donald Trump wieder kassiert. Eskalation vermeiden Auch Washington will ein Jahr vor der US-Präsidentenwahl offenbar eine Eskalation des Konfliktes mit den großen Handelspartnern vermeiden - zumal der Handelskrieg mit China weiter brodelt und in beiden Ländern das Wachstum bremst. \"Wir haben sehr gute Gespräche mit unseren europäischen Freunden, mit unseren japanischen Freunden, mit unseren koreanischen Freunden gehabt - und das sind die größten Autoproduzenten\", sagte Ross Bloomberg TV zufolge. Es blieb zunächst unklar, ob die EU und Japan Washington gegenüber in Sachen Autoexporte bislang irgendwelche Zugeständnisse gemacht haben. Südkorea gilt wegen eines neuen US-Handelsabkommens als vor neuen Strafzöllen geschützt. mik/dpa-AFX © SPIEGEL ONLINE 2019 Alle Rechte vorbehalten Vervielfältigung nur mit Genehmigung",
-        "source": "https://www.spiegel.de",
-        "sourceName": "spiegel",
-        "author": "",
-        "topic": "Wirtschaft",
-        "link": "https://www.spiegel.de/wirtschaft/soziales/autoindustrie-us-regierung-haelt-strafzoelle-fuer-vermeidbar-a-1294691.html#ref=rss",
-        "crawlDate": "2019-11-04T07:12:08.900+0000",
-        "creationDate": "Montag, 04.11.2019 07:16 Uhr"
-    },
-    {
-        "headline": "Rechtsextremismus - Regierung fürchtet Terrorpotenzial bei Bürgerwehren",
-        "textBody": "In fast allen Bundesländern patrouillieren mittlerweile selbst ernannte Bürgerwehren. Die Bundesregierung betrachtet das mit Sorge und sieht in den Gruppierungen \"Ansätze für rechtsterroristische Potenziale\". Nach dem Anschlag auf eine Synagoge in Halle an der Saale im vergangenen Monat ist das Thema Rechtsterrorismus in Deutschland wieder in den Fokus der Debatte gerückt. Nach Einschätzung der Bundesregierung gibt es auch bei selbst ernannten Bürgerwehren \"Ansätze für rechtsterroristische Potenziale\". Das geht nach einem Bericht der \"Neuen Osnabrücker Zeitung\" (\"NOZ\") aus einer Antwort des Innenministeriums auf Anfrage der Links-Fraktion hervor. Der Übergang von der Bürgerwehr \"hin zu einem eigenmächtigen Eintreten für Sicherheit und Ordnung abseits des staatlichen Gewaltmonopols oder gar hin zu einem gewalttätigen Handeln\" sei fließend. Die Rechtsextremisten würden vorgeben, dass der Staat außerstande sei, die Sicherheit und Ordnung zu gewährleisten, weswegen sie diese Aufgabe übernehmen wollten. Laut Bundesregierung verfolgten die Extremisten aber auch ein anderes Ziel: \"Vielmehr sollen Fremde oder politische Gegner durch die Präsenz von rechtsextremistischen Bürgerwehren vor Ort gezielt eingeschüchtert werden.\" Nach Kenntnis der Bundesregierung gibt es in fast allen Bundesländern mittlerweile entsprechende Gruppierungen. Über Mitgliederzahl der Bürgerbewegungen oder Teilnehmer an den Patrouillen macht das Ministerium keine Angaben. Die Innenexpertin der Linksfraktion, Ulla Jelpke, forderte in der \"NOZ\" die Sicherheitsbehörden auf, konsequent gegen selbst ernannte Bürgerwehren vorzugehen. Maßnahmenpaket gegen Rechtsextremismus Erst in der vergangenen Woche hat die Bundesregierung ein Maßnahmenpaket gegen Rechtsextremismus beschlossen. Der Neun-Punkte-Plan sieht unter anderem eine Verschärfung des Waffenrechts, mehr Präventionsarbeit und eine konsequentere Verfolgung von Hass und Hetze im Netz vor. Am Wochenende wurde dann bekannt, dass die Grünen-Politiker Cem Özdemir und Claudia Roth offenbar auf einer Todesliste von Rechtsextremisten stehen. Parteiübergreifend sorgte die Nachricht für Entsetzen. Politiker mehrerer Parteien fordern nun eine schnelle Umsetzung des Regierungsplans gegen Hass und Rechtsextremismus. asc/dpa © SPIEGEL ONLINE 2019 Alle Rechte vorbehalten Vervielfältigung nur mit Genehmigung",
-        "source": "https://www.spiegel.de",
-        "sourceName": "spiegel",
-        "author": "",
-        "topic": "Politik",
-        "link": "https://www.spiegel.de/politik/deutschland/rechtsextremismus-regierung-sieht-bei-buergerwehren-potenzial-fuer-rechten-terror-a-1294687.html#ref=rss",
-        "crawlDate": "2019-11-04T07:12:09.081+0000",
-        "creationDate": "Montag, 04.11.2019 06:57 Uhr"
-    },
-    {
-        "headline": "Baden-Württemberg - Leichtes Erdbeben auf der Schwäbischen Alb",
-        "textBody": "Im Südwesten Deutschlands hat es in der Nacht ein Erdbeben gegeben. Das Epizentrum lag nahe Albstadt. Die Erschütterungen waren in einem Umkreis von 30 Kilometern zu spüren. Seismografen-Ausdruck eines Erdbebens in Hessen (Archivbild von 2010) Ein leichtes Erdbeben hat in der Nacht Teile der Schwäbischen Alb erschüttert. Das Epizentrum des Bebens der Stärke 3,8 lag nördlich von Albstadt im Zollernalbkreis, auf halbem Weg zwischen Stuttgart und Bodensee, wie der Erdbebendienst Südwest mitteilte. Die Erdstöße um 1.59 Uhr seien vermutlich im Umkreis von etwa 30 Kilometern zu spüren gewesen. Die Polizei in Tuttlingen meldete, mehrere Bewohner hätten in der Nacht wegen des Erdbebens angerufen. Etwaige Schäden sollten gemeldet werden, hieß es. Bislang seien der Polizei keine Schäden bekannt. Erst im Sommer hatte die Erde in der Bodenseeregion mehrmals gebebt. Das stärkste Erdbeben erreichte Ende Juli einen Wert von 3,7. Deutschland befindet sich mitten auf der Eurasischen Platte, Plattengrenzen sind hier weit entfernt - und doch bebt auch hierzulande immer wieder der Boden. Grund sind Brüche und Schwächezonen im Untergrund, die für Probleme sorgen können. Dass bei Beben aber auch hierzulande durchaus größere Schäden auftreten können, haben etwa die Erschütterungen gezeigt, die im April 1992 in der Grenzgegend zwischen Deutschland und den Niederlanden registriert wurden. Das sogenannte Erdbeben von Roermond hatte damals eine Stärke von 5,3 und verursachte Schäden im dreistelligen Millionenbereich. Es waren die stärksten Erdstöße in Deutschland seit fast 250 Jahren. wit/dpa © SPIEGEL ONLINE 2019 Alle Rechte vorbehalten Vervielfältigung nur mit Genehmigung",
-        "source": "https://www.spiegel.de",
-        "sourceName": "spiegel",
-        "author": "",
-        "topic": "Panorama",
-        "link": "https://www.spiegel.de/panorama/albstadt-leichtes-erdbeben-auf-der-schwaebischen-alb-a-1294686.html#ref=rss",
-        "crawlDate": "2019-11-04T07:12:09.224+0000",
-        "creationDate": "Montag, 04.11.2019 06:43 Uhr"
-    },
-    {
-        "headline": "\"Todesliste\" von Rechtsextremen - Morddrohungen gegen Özdemir und Roth sorgen für Bestürzung",
-        "textBody": "\"Politiker dürfen kein Freiwild werden\": Nach den Drohungen gegen die Grünen Cem Özdemir und Claudia Roth fordern Politiker mehrerer Parteien eine schnelle Umsetzung des Regierungsplans gegen Hass und Rechtsextremismus. Claudia Roth und Cem Özdemir (Archivbild 2013): Wie am Wochenende bekannt wurde, haben die beiden Grünen-Politiker Morddrohungen erhalten Die Morddrohungen gegen die Grünen-Politiker Cem Özdemir und Claudia Roth haben parteiübergreifend Bestürzung ausgelöst. Bundesinnenminister Horst Seehofer (CSU) sprach in der \"Süddeutschen Zeitung\" von einer \"hochproblematischen Verrohung unserer Gesellschaft\". Der bayerische Innenminister Joachim Herrmann (CSU) sagte den Zeitungen der Funke-Mediengruppe: \"Die hässlichen Drohungen mutmaßlicher Rechtsextremisten gegen Herrn Özdemir und Frau Roth sind unsäglich und ein Angriff auf die freiheitliche Demokratie insgesamt.\" Linken-Chefin Katja Kipping schrieb bei Twitter: \"Solidarische Grüße über alle Parteigrenzen hinweg an Cem Özdemir, Claudia Roth und all jene, die im Alltag bedroht werden.\" Und Linksfraktionschef Dietmar Bartsch bezeichnete die Drohungen in der \"Welt\" als \"Folge eines vergifteten gesellschaftlichen Klimas und jahrelang vernachlässigten Kampfes gegen rechte Netzwerke\". Auch Politiker anderer Parteien forderten eine schnelle Umsetzung des Regierungsplans gegen Hass und Rechtsextremismus. Die Grünen-Politikerin Renate Künast sagte der \"Welt\", wer im Netz die schärfste aller Drohungen - die direkte Morddrohung - ausspreche, müsse \"mit allen Mitteln ausfindig gemacht und bestraft werden\". Mit Blick auf die vom Bundeskabinett beschlossenen Eckpunkte gegen Rechtsextremismus und Hasskriminalität sagte Künast: \"Noch schöner wäre es, wenn daraus bald Gesetze würden, und am allerschönsten, wenn diese auch bald angewendet würden.\" Der Parlamentarische Staatssekretär im Bundesinnenministerium, Stephan Mayer (CSU), sagte der \"Passauer Neuen Presse\": \"Wer im Internet hetzt und droht, muss künftig härter und effektiver verfolgt werden.\" Unionsfraktionsvize Thorsten Frei sagte der \"Welt\" zum jüngst auf den Weg gebrachten Maßnahmenpaket der Regierung gegen Rechtsextremismus: \"Wir werden nun alles daran setzen, dass es rasch vom Parlament beschlossen wird.\" Inzwischen vergehe kein Tag mehr, ohne dass staatliche Repräsentanten übel beleidigt oder mit dem Tode bedroht werden. Der CDU-Politiker forderte über das Maßnahmenpaket hinaus mehr Befugnisse für die Sicherheitsbehörden im digitalen Raum. \"Wir können nicht unsere Behörden im Netz taub und blind machen und zugleich glauben, dass wir im Kampf gegen den organisierten Extremismus erfolgreich sein werden.\" Der FDP-Innenexperte Konstantin Kuhle sprach von einer \"dramatischen\" Häufung von Drohungen oder gar Angriffen auf öffentliche Personen. \"Politiker dürfen kein Freiwild werden\", sagte er. Die Zeitungen der Funke-Mediengruppe hatten am Wochenende berichtet, dass Özdemir Ende Oktober eine Morddrohung erhalten habe. Sein Name stehe als erster auf einer Todesliste, hieß es demnach in einer E-Mail an das Büro des türkischstämmigen Bundestagsabgeordneten. Absender sei eine Gruppe namens \"Atomwaffen Division Deutschland\". An die Bundestagsvizepräsidentin Roth schrieb sie demnach: \"Sie sind zurzeit Platz zwei auf unserer Abschussliste.\" Justizministerin will Gesetzentwurf bis zum Jahresende vorlegen Als Konsequenz aus dem Anschlag von Halle und den Mord an dem Kasseler Regierungspräsidenten Walter Lübcke hatte die Bundesregierung vergangene Woche ein Maßnahmenpaket gegen Rechtsextremismus und Antisemitismus beschlossen. Eine der wichtigsten Neuregelungen betrifft dabei Internetunternehmen: Online-Netzwerke sollen verpflichtet werden, strafbare Inhalte künftig aktiv den Sicherheitsbehörden zu melden und gegebenenfalls auch die IP-Adresse der Nutzer herauszugeben. Aggressive Beleidigungen und Hetze im Netz sollen härter bestraft werden können. Gemäß der Kabinettsvorlage soll auch das Waffenrecht verschärft werden, zudem ist ein besserer Schutz von Kommunalpolitikern und zivilgesellschaftlich engagierten Bürgern vor Hass und Hetze vorgesehen. Justizministerin Christine Lambrecht (SPD) kündigte an, einen Gesetzentwurf bis Jahresende vorzulegen. aar/dpa/AFP © SPIEGEL ONLINE 2019 Alle Rechte vorbehalten Vervielfältigung nur mit Genehmigung",
-        "source": "https://www.spiegel.de",
-        "sourceName": "spiegel",
-        "author": "",
-        "topic": "Politik",
-        "link": "https://www.spiegel.de/politik/deutschland/cem-oezdemir-und-claudia-roth-morddrohungen-sorgen-fuer-bestuerzung-a-1294685.html#ref=rss",
-        "crawlDate": "2019-11-04T07:12:09.381+0000",
-        "creationDate": "Montag, 04.11.2019 04:40 Uhr"
-    },
-    {
-        "headline": "Sorge um \"Iron Scow\" - Unwetter wäscht Schiffswrack näher an Niagarafälle",
-        "textBody": "Seit mehr als hundert Jahren steckt ein Lastkahn auf dem Niagarafluss fest - nun haben ihn heftige Regenfälle losgespült: Das bei Touristen als Fotomotiv beliebte Boot nähert sich den Wasserfällen bedrohlich. Lastkahn an den Niagarafällen: Mehr als 50 Meter von der Stelle bewegt Das Halloween-Fest war in diesem Jahr im Norden des Bundesstaates New York eine extrem ungemütliche Angelegenheit. Sturm und vor allem starker Regen verdarben nicht nur Trick-or-Treatern den Abend, sondern sorgten auch an den Niagara-Fällen für Aufregung. Nach den heftigen Unwettern hat sich dort ein seit mehr als hundert Jahren feststeckendes Boot Dutzende Meter bewegt. Das als \"Iron Scow\" (Eiserner Lastkahn) bekannte Boot sei rund 50 Meter in Richtung des Wasserfall-Rands gerückt, sagte ein Vertreter des Niagara-Parks in Kanada. Zuvor habe es sich mehr als ein Jahrhundert lang nur wenige Zentimeter von der Stelle gerührt. The severe weather conditions experienced yesterday have caused the iron scow, which has remained lodged in the powerful upper rapids above the Falls for over a century, to shift significantly from its position. History of the Iron Scow Rescue: https://t.co/9Pehx8dabS pic.twitter.com/AG4nfLrzXx Bislang sehe es so aus, als sei das Boot sicher - \"falls es Unwetter gibt, könnte es sich aber noch weiterbewegen\", sagte Niagara-Parkchef David Adames dem Sender CBC. Der Kahn habe sich laut den offiziellen Angaben erst von seinem felsigen Liegeplatz gelöst, dann gedreht und auf die Seite gelegt. Es könne sich nun \"für Jahre oder auch nur Tage\" an dieser Stelle befinden. \"Da kann man nur raten\", zitiert CNN einen anderen Offiziellen, Jim Hill. Das nächste Unwetter könnte die Lage noch verschärfen Seit einem Bootsunglück im August 1918 steckt der Kahn auf dem Niagara-Fluss fest - etwa 600 Meter vom Rand des Wasserfalls entfernt. Starke Regenfälle und heftige Winde hatten örtlichen Medienberichten zufolge am Donnerstag dazu geführt, dass sich der Kahn nun von der Stelle bewegte. Sollte das Boot noch weiter nach vorne rücken, würden Sicherheitsmaßnahmen ergriffen, betonte David Adames. Der \"Eiserne Kahn\" gehört bei Niagara-Touristen zu den beliebten Fotomotiven. Millionen Menschen besuchen jährlich die drei zwischen den USA und Kanada gelegenen Wasserfälle. Anfang dieses Jahres sorgten die Wasserfälle für Schlagzeilen, als Teile während einer extremen Kältewelle im Norden der Vereinigten Staaten einfroren. jok/AFP © SPIEGEL ONLINE 2019 Alle Rechte vorbehalten Vervielfältigung nur mit Genehmigung",
-        "source": "https://www.spiegel.de",
-        "sourceName": "spiegel",
-        "author": "",
-        "topic": "Panorama",
-        "link": "https://www.spiegel.de/panorama/gesellschaft/unwetter-waescht-schiffswrack-naeher-an-niagara-faelle-a-1294683.html#ref=rss",
-        "crawlDate": "2019-11-04T07:12:09.497+0000",
-        "creationDate": "Montag, 04.11.2019 02:58 Uhr"
-    }
-]
+
+class Article:
+    def __init__(self, headline, link, text_body, source, source_name, author, topic, crawl_date):
+        self.headline = headline
+        self.link = link
+        self.text_body = text_body
+        self.source = source
+        self.source_name = source_name
+        self.author = author
+        self.topic = topic
+        self.crawl_date = crawl_date
+
+    def serialize(self):
+        return {
+            'headline': self.headline,
+            'link': self.link,
+            'textBody': self.text_body
+        }
+
+
+def get_news_links(url):
+    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+    item = soup.find_all("div", class_="news-header")
+
+    links = []
+    for item in item:
+        links.append(item.find('a').get('href').strip())
+    return links
+
+
+def scrape(link):
+    soup = BeautifulSoup(requests.get(link).content, 'html.parser')
+
+    headline = soup.find("div", class_="page-heading")
+    text_body = soup.find_all("div", class_="breadbrumbs")[0]
+    return Article(headline, link)
 
 
 @app.route('/')
-def hello_world():
-    return jsonify(articles)
+def get_articles():
+    links = get_news_links("http://pikio.pl")
+    articles = []
+    for link in links:
+        articles.append(scrape(link))
+    return jsonify([e.serialize() for e in articles])
 
 
 if __name__ == '__main__':
