@@ -43,7 +43,8 @@ def get_news_links(url):
 
     links = []
     for item in item:
-        links.append(item.find('a').get('href').strip())  # strip damit
+        if item.find('a'):
+            links.append(item.find('a').get('href').strip())
     return links
 
 
