@@ -5,6 +5,7 @@ from flask import Flask, jsonify
 from bs4 import BeautifulSoup
 import requests
 from datetime import date
+import feedparser
 
 
 # Article Klasse die die zu scrapenden Daten speichert
@@ -38,13 +39,11 @@ class Article:
 
 # Sucht sich die eine Liste mit allen Artikel links zusammen
 def get_news_links(url):
-    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
-    item = soup.find_all('div', class_='news-header')
-
     links = []
-    for item in item:
-        if item.find('a'):
-            links.append(item.find('a').get('href').strip())
+    data = feedparser.parse('http://www.tagesschau.de/xml/rss2')
+    for item in data.entries:
+        if 'livestream' not in item.link:
+            links.append(item.link)
     return links
 
 
@@ -53,29 +52,37 @@ def scrape(link):
     soup = BeautifulSoup(requests.get(link).content, 'html.parser')
     [s.extract() for s in soup('script')]  # entfernt alle script tags
 
+    # CREATION_DATE
+    creation_date = '' if soup.find('span', class_='stand') is None else soup.find('span', class_='stand').string
+
     # HEADLINE
-    headline = soup.find('h1', class_='page-heading').string
+    dachzeile = '' if soup.find('span', class_='dachzeile') is None else soup.find('span', class_='dachzeile').string
+    title = '' if soup.find('span', class_='headline') is None else soup.find('span', class_='headline').string
+    headline = dachzeile + ' - ' + title
 
     # TOPIC
-    topic = ''
-    if len(soup.find_all('div', class_='breadcrumbs')) > 0:
-        topic = soup.find_all('div', class_='breadcrumbs')[0].find_all('a')[1].get('title')
+    topic = '' if len(link.split("/")) < 3 else link.split("/")[3]
 
     # AUTHOR
-    author = ''
-    if len(soup.find_all('div', class_='article-author')) > 0:
-        author = soup.find_all('div', class_='article-author')[0].find('a').get_text()
+    author = '' if soup.find('p', class_='autorenzeile') is None else soup.find('p', class_='autorenzeile').string
+    author = author.replace("Von ", "")
+    author = author.replace(",", "")
 
     # TEXT_BODY
-    text_body = soup.find_all('div', 'article-container')[0].get_text()
+    text_body = ''
+    text_body_tag = soup.find_all('p', 'text')
+    for ptag in text_body_tag:
+        text_body = text_body + ptag.get_text()
+
     text_body = ' '.join(text_body.split())  # entfernt alle überschüssigen whitespaces und Zeilenumbrüche
+    text_body = text_body.replace(creation_date, "")  # entfernt den Zeitstempel aus dem Text
 
-    # CREATION_DATE
-    creation_date = ''
-    if soup.find('time'):
-        creation_date = soup.find('time').get('datetime')
+    # CLEAN TIME
+    creation_date = creation_date.replace("Stand: ", "")
+    creation_date = creation_date.replace(" Uhr", "")
 
-    return Article(headline, link, text_body, 'http://pikio.pl', 'pikio', author, topic, date.today(), creation_date)
+    return Article(headline, link, text_body, 'https://www.tagesschau.de', 'tagesschau', author, topic, date.today(),
+                   creation_date)
 
 
 # ************************* Flask web app *************************  #
@@ -86,18 +93,19 @@ app = Flask(__name__)
 
 # Hier wird der Pfad(route) angegeben der den scraper arbeiten lässt.
 # In dem Fall ist die URL "localhost:5000/pikio"
-@app.route('/pikio')
+@app.route('/tagesschau')
 def get_articles():
-    links = get_news_links('http://pikio.pl')
+    links = get_news_links('http://www.tagesschau.de/xml/rss2')
     articles = []
     for link in links:
+        print(link)
         articles.append(scrape(link))
     return jsonify([e.serialize() for e in articles])  # jsonify erzeugt aus einem Objekt einen String im JSON Format
 
 
 @app.route('/')
 def index():
-    return "<h1>Hier passiert nichts. Bitte gehe zu 'localhost:5000/pikio</h1>"
+    return "<h1>Go to 'localhost:5000/tagesschau</h1>"
 
 
 # Web Application wird gestartet
