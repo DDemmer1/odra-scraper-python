@@ -18,7 +18,7 @@ def get_news_links(url):
 
     elif "blaetter.de/" in url:
         for entry in doc['entries']:
-            # sämtliche Übersichtsseiten herausfiltern
+            # smtliche Übersichtsseiten herausfiltern
             non_articles_url_contains = [ "/dossiers/", '/kurzgefasst', '/chronik-des-monats' ]
             link = entry['link']
             if not any(x in link for x in non_articles_url_contains):

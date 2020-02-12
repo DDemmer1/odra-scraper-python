@@ -17,7 +17,6 @@ def get_news_links(url):
 
 # Extrahiert alle notwendigen informationen von einem einzigen Artikel
 def scrape(link):
-    try:
         soup = BeautifulSoup(requests.get(link).content, 'html.parser')
         [s.extract() for s in soup('script')]  # entfernt alle script tags
 
@@ -34,8 +33,8 @@ def scrape(link):
 
         # AUTHOR
         author = '' if soup.find('p', class_='autorenzeile') is None else soup.find('p', class_='autorenzeile').string
-        author = author.replace("Von ", "")
-        author = author.replace(",", "")
+        author = '' if author is None else author.replace("Von ", "")
+        author = '' if author is None else author.replace(",", "")
 
         # TEXT_BODY
         text_body = ''
@@ -43,7 +42,7 @@ def scrape(link):
         for ptag in text_body_tag:
             text_body = text_body + ptag.get_text()
         if text_body is not '':
-            text_body = ' '.join(text_body.split())  # entfernt alle überschüssigen whitespaces und Zeilenumbrüche
+            text_body = ' '.join(text_body.split())
             text_body = text_body.replace(creation_date, "")  # entfernt den Zeitstempel aus dem Text
 
         # CLEAN TIME
@@ -51,5 +50,3 @@ def scrape(link):
         creation_date = creation_date.replace(" Uhr", "")
 
         return article.Article(headline, link, text_body, 'https://www.tagesschau.de', 'tagesschau', author, topic, date.today(), creation_date)
-    except AttributeError:
-        print("AttributeError")

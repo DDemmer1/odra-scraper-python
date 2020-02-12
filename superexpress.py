@@ -42,7 +42,7 @@ def scrape(link):
 
     # TEXT_BODY
     text_body = soup.find_all('div', 'gl_plugin article')[0].get_text()
-    text_body = ' '.join(text_body.split())  # entfernt alle überschüssigen whitespaces und Zeilenumbrüche
+    text_body = ' '.join(text_body.split())
 
     # CREATION_DATE
     creation_date = ''

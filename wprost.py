@@ -39,7 +39,7 @@ def scrape(link):
     # TEXT_BODY
     if len(soup.find_all('div', 'art-text-inner')) > 0:
         text_body = soup.find_all('div', 'art-text-inner')[0].get_text()
-        text_body = ' '.join(text_body.split())  # entfernt alle überschüssigen whitespaces und Zeilenumbrüche
+        text_body = ' '.join(text_body.split())
     else:
         text_body = ''
 

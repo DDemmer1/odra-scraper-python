@@ -15,11 +15,11 @@ class Article:
             'headline': self.headline,
             'textBody': self.text_body,
             'source': self.source,
-            'source_name': self.source_name,
+            'sourceName': self.source_name,
             'author': self.author,
             'topic': self.topic,
             'link': self.link,
-            'crawl_date': self.crawl_date,
-            'creation_date': self.creation_date,
+            'crawlDate': self.crawl_date,
+            'creationDate': self.creation_date,
         }
 
