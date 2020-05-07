@@ -73,7 +73,7 @@ def scrape(link):
         creation_date = soup.find('span', class_="date").string
         # print(creation_date)
 
-        return article.Article(headline, link, text, 'https://rotefahne.eu/', 'rotefahne', author, topic,
+        return article.Article(headline.strip(), link, text.strip().replace("/.dropcap ", ""), 'https://rotefahne.eu/', 'rotefahne', author, topic,
                        date.today(), creation_date)
 
     elif "polsatnews.pl" in link:

@@ -75,16 +75,13 @@ def scrape(link, _creation_date = ''):
         # HEADLINE
         headline = "" if soup.find('h1', class_='heading--article') is None else soup.find('h1', class_='heading--article').find('span').string
 
-        # TOPIC
+        # Author
         if soup.findAll('div', class_='articleinfo'):
             for a in soup.findAll('div', class_='articleinfo'):
                 if 'author--article' not in a.attrs['class']:
                     for t in a.findAll('a'):
-                        topic += t.string + ' '
-
-        # AUTHOR
-        if soup.find('div', class_='author--article'):
-            author = soup.find('div', class_='author--article').find('a').string
+                        author += t.string + ' '
+        topic = ""
 
         # TEXT_BODY
         text_body = soup.find('div', class_='field--type-text-with-summary').getText()
@@ -92,5 +89,5 @@ def scrape(link, _creation_date = ''):
         # CREATION_DATE
         creation_date = _creation_date
 
-    return article.Article(headline, link, text_body, source_url, source_name, author, topic, date.today(), creation_date)
+    return article.Article(headline.strip(), link, text_body.strip(), source_url, source_name, author.strip(), topic, date.today(), creation_date)
 

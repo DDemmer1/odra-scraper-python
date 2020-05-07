@@ -59,4 +59,4 @@ def scrape(link):
     # CRAWL_DATE
     crawl_date = datetime.now()
 
-    return article.Article(headline, link, text_body, 'https://www.bbc.com', 'bbc', author, topic, crawl_date, creation_date)
+    return article.Article(headline, link, text_body, 'https://www.bbc.com', 'bbc', author.replace("By ",""), topic, crawl_date, creation_date)

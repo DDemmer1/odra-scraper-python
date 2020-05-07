@@ -19,7 +19,6 @@ def get_news_links(url):
 
 
 def scrape(link):
-    print(link)
     soup = BeautifulSoup(requests.get(link).content, 'html.parser')
     [s.extract() for s in soup('script')]  # entfernt alle script tags
 
@@ -30,6 +29,8 @@ def scrape(link):
     topic = ''
     if len(soup.find_all('span', class_='item-containers')) > 0:
         topic = soup.find_all('span', class_='item-containers')[0].find('a').get('a')
+
+    topic = "" if topic is None else topic
 
     # AUTHOR
     author = ''
@@ -48,4 +49,4 @@ def scrape(link):
     if soup.find('time'):
         creation_date = soup.find('time').get('datetime')
 
-    return article.Article(headline, link, text_body, 'https://www.wprost.pl', 'wprost', author, topic, date.today(), creation_date)
+    return article.Article(headline.strip(), link, text_body, 'https://www.wprost.pl', 'wprost', author.strip(), topic.strip(), date.today(), creation_date)

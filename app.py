@@ -30,7 +30,7 @@ def get_articles_wprost():
     links = wprost.get_news_links('https://www.wprost.pl/')
     articles = []
     for link in links:
-        articles.append(tagesschau.scrape(link))
+        articles.append(wprost.scrape(link))
     return jsonify([e.serialize() for e in articles])  # jsonify erzeugt aus einem Objekt einen String im JSON Format
 
 
@@ -146,3 +146,5 @@ def site_map():
 # Web Application wird gestartet
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8081)
+
+

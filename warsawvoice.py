@@ -36,25 +36,36 @@ def scrape(link):
     headline = ''
     hl = soup.find('div', class_='artTitle')
     if hl is not None:
-        headline = hl.string
+        headline = hl.get_text().strip()
+    else:
+        print(link)
 
     # TOPIC
     topic = ''
+    t = soup.find("div", class_="sciezka")
+    if t is not None:
+        topic = t.findAll("a")[1].get_text()
     # AUTHOR
     author = ''
-
-    # TEXT_BODY
-    text_body = ''
-    tb = soup.find('div', class_='artFull')
-    for div in tb.find_all('div'):
-        div.clear()
-
-    text_body = tb.get_text()
 
     # CREATION_DATE
     creation_date = ''
     d = soup.find('div', class_='artDate')
     if d is not None:
-        creationDate = d.string
+        creation_date = d.get_text().strip()
+
+    # TEXT_BODY
+    text_body = ''
+    tb = soup.find('div', class_='artFull')
+
+    if tb is None:
+        print(link)
+
+    for div in tb.find_all('div'):
+        div.clear()
+
+    text_body = tb.get_text().strip()
+
+
 
     return article.Article(headline, link, text_body, 'http://www.warsawvoice.pl', 'warsawvoice', author, topic, date.today(), creation_date)

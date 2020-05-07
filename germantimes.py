@@ -7,12 +7,14 @@ import article
 
 def get_news_links(url):
     soup = BeautifulSoup(requests.get(url).content, 'html.parser')
-    item = soup.find_all('div', class_='trenner')
+    items = soup.find_all('div', class_='trenner')
 
     links = []
-    for item in item:
-	    if item.find('a'):
-		    links.append(item.find('a').get('href').strip())  # strip damit
+    for item in items:
+        if item.find('a'):
+            link = item.find('a').get('href').strip()
+            if "download" not in link:
+                links.append(link)  # strip damit
     return links
 
 
@@ -28,7 +30,7 @@ def scrape(link):
     if len(soup.find_all('div', class_='category')) > 0:
         topic = soup.find_all('div', class_='category')[0].find('span').get('span')
 
-	# AUTHOR
+    # AUTHOR
     author = ''
     if len(soup.find_all('span', class_='author')) > 0:
         author = soup.find_all('span', class_='author')[0].get_text()
@@ -42,4 +44,5 @@ def scrape(link):
     if soup.find('time'):
         creation_date = soup.find('time').get('datetime')
 
-    return article.Article(headline, link, text_body, 'http://www.german-times.com', 'german-times', author, topic, date.today(), creation_date)
+    return article.Article(headline, link, text_body, 'http://www.german-times.com', 'german-times', author, topic,
+                           date.today(), creation_date)
